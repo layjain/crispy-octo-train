@@ -110,7 +110,7 @@ class DQNAgent(BaseAgent):
                 render = True
 
             if render:
-                self.env_wrapper.env.render()
+                #self.env_wrapper.env.render()
                 j += 1
                 if j == 1000:
                     render = False
