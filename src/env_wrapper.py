@@ -21,7 +21,7 @@ class GymWrapper():
     def new_game(self):
         if self.lives == 0:
             self.env.reset()
-        self._step(0)
+        self._step(0) ##WHY??
         self.reward = 0
         self.action = 0
 
@@ -34,6 +34,7 @@ class GymWrapper():
     def _step(self, action):
         self.action = action
         _, self.reward, self.terminal, self.info = self.env.step(action)
+        print('action:',action,'terminal:',self.terminal)
 
 
     def random_step(self):
@@ -43,6 +44,12 @@ class GymWrapper():
         lives_before = self.lives
         self._step(action)
         if self.lives < lives_before:
+            '''
+            EXPLANATION (LJ): 
+            We initialized self.lives=0. 
+            If (at all) self.lives becomes negative, 
+            self.terminal will be set to True.
+            '''
             self.terminal = True
 
 

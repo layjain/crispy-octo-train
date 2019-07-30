@@ -111,8 +111,9 @@ class DRQNAgent(BaseAgent):
                     ep_rewards = []
                     actions = []
 
-            if self.i % 500000 == 0 and self.i > 0:
+            if self.i % 50000 == 0 and self.i > 0:
                 j = 0
+                print('saving..')
                 self.save()
             if self.i % 100000 == 0:
                 j = 0
@@ -130,6 +131,7 @@ class DRQNAgent(BaseAgent):
         self.lstm_state_c, self.lstm_state_h = self.net.initial_zero_state_single, self.net.initial_zero_state_single
         i = 0
         episode_steps = 0
+        episode_reward=0
         while i < episodes:
             a, self.lstm_state_c, self.lstm_state_h = self.net.sess.run([self.net.q_action, self.net.state_output_c, self.net.state_output_h],{
                 self.net.state : [[self.env_wrapper.screen]],
@@ -139,10 +141,13 @@ class DRQNAgent(BaseAgent):
             action = a[0]
             self.env_wrapper.act_play(action)
             episode_steps += 1
+            episode_reward+=self.env_wrapper.reward
             if episode_steps > self.config.max_steps:
                 self.env_wrapper.terminal = True
             if self.env_wrapper.terminal:
+                print('episode terminated in '+str(episode_steps)+' steps with reward '+str(episode_reward))
                 episode_steps = 0
+                episode_reward=0
                 i += 1
                 self.env_wrapper.new_play_game()
                 self.lstm_state_c, self.lstm_state_h = self.net.initial_zero_state_single, self.net.initial_zero_state_single

@@ -102,8 +102,9 @@ class DQNAgent(BaseAgent):
                     ep_rewards = []
                     actions = []
 
-            if self.i % 500000 == 0 and self.i > 0:
+            if self.i % 50000 == 0 and self.i > 0:
                 j = 0
+                print('saving..')
                 self.save()
             if self.i % 100000 == 0:
                 j = 0
@@ -122,18 +123,27 @@ class DQNAgent(BaseAgent):
         for _ in range(self.config.history_len):
             self.history.add(self.env_wrapper.screen)
         episode_steps = 0
+        ###EDIT (LJ): added rewards calculation, early stopping
+        episode_reward = 0
         while i < episodes:
+            #Chose Action:
             a = self.net.q_action.eval({
                 self.net.state : [self.history.get()/255.0]
             }, session=self.net.sess)
             action = a[0]
+            #Take Action
             self.env_wrapper.act_play(action)
             self.history.add(self.env_wrapper.screen)
             episode_steps += 1
+            episode_reward+=self.env_wrapper.reward
+            # if episode_steps%10000==0:
+            #     print('episode steps:',episode_steps, 'episode_reward:', episode_reward)
             if episode_steps > self.config.max_steps:
                 self.env_wrapper.terminal = True
             if self.env_wrapper.terminal:
+                print('episode terminated in '+str(episode_steps)+' steps with reward '+str(episode_reward))
                 episode_steps = 0
+                episode_reward = 0
                 i += 1
                 self.env_wrapper.new_play_game()
                 for _ in range(self.config.history_len):
