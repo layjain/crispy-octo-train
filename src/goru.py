@@ -231,6 +231,9 @@ class GORUCell(rnn_cell_impl.RNNCell):
     def __call__(self, inputs, state, scope=None):
         with tf.variable_scope(scope or "goru_cell"):
 
+            # change state to LSTMstateTuple
+            state = state.h
+
             inputs_size = inputs.get_shape()[-1]
 
             input_matrix_init = tf.random_uniform_initializer(-0.01, 0.01)
@@ -265,4 +268,5 @@ class GORUCell(rnn_cell_impl.RNNCell):
             c = self._activation(r * Unitaryh + U_cx, bias_c)
             new_state = tf.multiply(g, state) + tf.multiply(1 - g, c)
 
-        return new_state, new_state
+        # return LSTMStateTuple, which has h and c
+        return new_state, tf.nn.rnn_cell.LSTMStateTuple(new_state, new_state)
