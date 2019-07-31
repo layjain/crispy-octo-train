@@ -84,14 +84,12 @@ def fully_connected_layer(x, output_dim, scope_name="fully", initializer=tf.rand
 #         # print(outputs.shape, state[0].shape, state[1].shape)
 #         return outputs, state
 
+#GORU
 def stateful_lstm(x, num_layers, lstm_size, state_input, scope_name="lstm"):
     with tf.variable_scope(scope_name):
         cell = GORUCell(lstm_size)
         cell = tf.nn.rnn_cell.MultiRNNCell([cell]*num_layers, state_is_tuple=True)
         outputs, state = tf.nn.dynamic_rnn(cell, x, initial_state=state_input)
-        # maker = tf.keras.layers.RNN(cell)
-        # print('maker is fine')
-        # outputs, state = maker(x, initial_state=(state_input))
         return outputs, state
 
 def huber_loss(x, delta=1.0):

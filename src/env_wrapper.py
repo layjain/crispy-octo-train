@@ -56,7 +56,7 @@ class GymWrapper():
     def act_play(self, action):
         lives_before = self.lives
         self._step(action)
-        self.env.render()
+        #self.env.render()
         if self.lives < lives_before:
             self.terminal = True
 
@@ -140,7 +140,7 @@ class RetroWrapper():
     def act_play(self, action):
         lives_before = self.lives
         self._step(action)
-        self.env.render()
+        #self.env.render()
         if self.lives < lives_before:
             self.terminal = True
 
