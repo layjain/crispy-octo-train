@@ -2,7 +2,7 @@ import gym
 import retro
 from src.utils import resize, rgb2gray
 import numpy as np
-
+import time
 
 
 class GymWrapper():
@@ -34,7 +34,7 @@ class GymWrapper():
     def _step(self, action):
         self.action = action
         _, self.reward, self.terminal, self.info = self.env.step(action)
-        print('action:',action,'terminal:',self.terminal)
+        #print('action:',action,'terminal:',self.terminal)
 
 
     def random_step(self):
@@ -57,6 +57,7 @@ class GymWrapper():
         lives_before = self.lives
         self._step(action)
         #self.env.render()
+        #time.sleep(0.05)
         if self.lives < lives_before:
             self.terminal = True
 

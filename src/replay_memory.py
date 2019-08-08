@@ -59,17 +59,21 @@ class DQNReplayMemory(ReplayMemory):
         self.screens[self.current] = screen
         self.terminals[self.current] = float(terminal)
         self.count = max(self.count, self.current + 1)
+        ###(LJ) self.count can never exceed self.config.mem_size
+        ###self.count keeps track of how much memory has already been filled
         self.current = (self.current + 1) % self.config.mem_size
+        ###self.current tells the current index in the memory
 
     def sample_batch(self):
         assert self.count > self.config.history_len
 
+        ###(LJ): Choose indices from memory which dont include the current index/terminal states
+        ### *** Repetition allowed
         indices = []
         while len(indices) < self.config.batch_size:
 
             while True:
                 index = random.randint(self.config.history_len, self.count-1)
-
                 if index >= self.current and index - self.config.history_len < self.current:
                     continue
 

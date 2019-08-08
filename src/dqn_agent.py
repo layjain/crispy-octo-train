@@ -13,7 +13,7 @@ class DQNAgent(BaseAgent):
         self.replay_memory = DQNReplayMemory(config)
         self.net = DQN(self.env_wrapper.action_space.n, config)
         self.net.build()
-        self.net.add_summary(["average_reward", "average_loss", "average_q", "ep_max_reward", "ep_min_reward", "ep_num_game", "learning_rate"], ["ep_rewards", "ep_actions"])
+        self.net.add_summary(["average_reward", "average_loss", "average_q", "ep_max_reward", "ep_avg_reward","ep_min_reward", "ep_num_game", "learning_rate"], ["ep_rewards", "ep_actions"])
 
     def observe(self):
         reward = max(self.min_reward, min(self.max_reward, self.env_wrapper.reward))
@@ -53,6 +53,7 @@ class DQNAgent(BaseAgent):
         for _ in range(self.config.history_len):
             self.history.add(self.env_wrapper.screen)
         for self.i in tqdm(range(self.i, steps)):
+            #take action, observe
             action = self.policy()
             self.env_wrapper.act(action)
             self.observe()
@@ -67,7 +68,7 @@ class DQNAgent(BaseAgent):
                 t += 1
             actions.append(action)
             total_reward += self.env_wrapper.reward
-
+            #total_reward, max_ep_reward, min_ep_reward, avg_ep_reward keep track of reward earned every self.config.test_step=5000 steps
             if self.i >= self.config.train_start:
                 if self.i % self.config.test_step == self.config.test_step -1:
                     avg_reward = total_reward / self.config.test_step
@@ -88,6 +89,7 @@ class DQNAgent(BaseAgent):
                         'ep_max_reward': max_ep_reward,
                         'ep_min_reward': min_ep_reward,
                         'ep_num_game': num_game,
+                        'ep_avg_reward': avg_ep_reward,
                         'learning_rate': self.net.learning_rate,
                         'ep_rewards': ep_rewards,
                         'ep_actions': actions
@@ -117,6 +119,7 @@ class DQNAgent(BaseAgent):
                     render = False
 
     def play(self, episodes, net_path):
+        d=[]
         self.net.restore_session(path=net_path)
         self.env_wrapper.new_game()
         i = 0
@@ -142,6 +145,7 @@ class DQNAgent(BaseAgent):
                 self.env_wrapper.terminal = True
             if self.env_wrapper.terminal:
                 print('episode terminated in '+str(episode_steps)+' steps with reward '+str(episode_reward))
+                d.append(episode_reward)
                 episode_steps = 0
                 episode_reward = 0
                 i += 1
@@ -149,3 +153,4 @@ class DQNAgent(BaseAgent):
                 for _ in range(self.config.history_len):
                     screen = self.env_wrapper.screen
                     self.history.add(screen)
+        print([d, sum(d)/len(d)])

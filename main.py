@@ -51,7 +51,7 @@ if __name__ == "__main__":
     else:
         assert args.net_path != "", "Please specify a net_path using the option --net_path"
         #change the no. of episodes, original=100000
-        main.play(10, args.net_path)
+        main.play(500, args.net_path)
 
 
 

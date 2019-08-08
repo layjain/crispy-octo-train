@@ -11,7 +11,7 @@ class DRQNAgent(BaseAgent):
         self.replay_memory = DRQNReplayMemory(config)
         self.net = DRQN(self.env_wrapper.action_space.n, config)
         self.net.build()
-        self.net.add_summary(["average_reward", "average_loss", "average_q", "ep_max_reward", "ep_min_reward", "ep_num_game", "learning_rate"], ["ep_rewards", "ep_actions"])
+        self.net.add_summary(["average_reward", "average_loss", "average_q", "ep_max_reward", "ep_min_reward","ep_avg_reward" ,"ep_num_game", "learning_rate"], ["ep_rewards", "ep_actions"])
 
     def observe(self, t):
         reward = max(self.min_reward, min(self.max_reward, self.env_wrapper.reward))
@@ -96,6 +96,7 @@ class DRQNAgent(BaseAgent):
                         'average_q': avg_q,
                         'ep_max_reward': max_ep_reward,
                         'ep_min_reward': min_ep_reward,
+                        'ep_avg_reward': avg_ep_reward,
                         'ep_num_game': num_game,
                         'learning_rate': self.net.learning_rate,
                         'ep_rewards': ep_rewards,

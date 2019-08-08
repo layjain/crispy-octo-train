@@ -34,7 +34,8 @@ class BaseModel():
         # delete ./out
         self.dir_output = "./out/"+network_type+"/"+config.env_name+"/"+ str(datetime.datetime.utcnow()) + "/"
         self.dir_model = self.dir_save + "/net/" +config.env_name+"/"+ str(datetime.datetime.utcnow()) + "/"
-
+        ###(LJ): to save many models, during learning
+        ###self.dir_model_start = self.dir_save + "/net/" +config.env_name+"/"+ str(datetime.datetime.utcnow()) + '_'
         self.train_steps = 0
         self.is_training = False
 
@@ -98,7 +99,9 @@ class BaseModel():
         self.saver.save(self.sess, self.dir_model)
 
     def restore_session(self, path=None):
+
         if path is not None:
             self.saver.restore(self.sess, path)
         else:
+            ###(LJ): WON'T WORK BECAUSE OF THE EDIT I MADE
             self.saver.restore(self.sess, self.dir_model)

@@ -14,6 +14,7 @@ class BaseAgent():
         self.epsilon = config.epsilon_start
         self.min_reward = -1.
         self.max_reward = 1.0
+        #What is the need for max and min reward?
         self.replay_memory = None
         self.history = None
         self.net = None
@@ -27,6 +28,7 @@ class BaseAgent():
     def save(self):
         self.replay_memory.save()
         self.net.save_session()
+        print('with i being '+str(self.i))
         np.save(self.config.dir_save+'step.npy', self.i)
 
     def load(self):
