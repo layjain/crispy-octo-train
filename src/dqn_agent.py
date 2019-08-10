@@ -126,7 +126,7 @@ class DQNAgent(BaseAgent):
         for _ in range(self.config.history_len):
             self.history.add(self.env_wrapper.screen)
         episode_steps = 0
-        ###EDIT (LJ): added rewards calculation, early stopping
+        ###EDIT (LJ): added rewards calculation
         episode_reward = 0
         while i < episodes:
             #Chose Action:

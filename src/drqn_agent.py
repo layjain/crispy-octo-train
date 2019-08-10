@@ -132,6 +132,7 @@ class DRQNAgent(BaseAgent):
         self.lstm_state_c, self.lstm_state_h = self.net.initial_zero_state_single, self.net.initial_zero_state_single
         i = 0
         episode_steps = 0
+        #(LJ):ADDED Episode Reward info
         episode_reward=0
         while i < episodes:
             a, self.lstm_state_c, self.lstm_state_h = self.net.sess.run([self.net.q_action, self.net.state_output_c, self.net.state_output_h],{

@@ -46,9 +46,9 @@ class GymWrapper():
         if self.lives < lives_before:
             '''
             EXPLANATION (LJ): 
-            We initialized self.lives=0. 
-            If (at all) self.lives becomes negative, 
-            self.terminal will be set to True.
+            A life is an Episide
+            Want to change this? Maybe helpful in
+            Strategy game, especially
             '''
             self.terminal = True
 
